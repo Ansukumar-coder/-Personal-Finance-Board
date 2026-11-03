@@ -1,4 +1,3 @@
-"""Personal Finance Dashboard  -  run with:  streamlit run app.py"""
 import io
 from pathlib import Path
 
@@ -18,13 +17,8 @@ st.set_page_config(page_title="Personal Finance Dashboard", page_icon="💰", la
 def load_and_clean(file_bytes: bytes):
     raw = pd.read_csv(io.BytesIO(file_bytes))
     return cleaning.clean_transactions(raw)
-
-
 def money(x: float) -> str:
     return f"{CURRENCY}{x:,.0f}"
-
-
-# ---------------- sidebar: data source ----------------
 st.sidebar.title("💰 Finance Dashboard")
 source = st.sidebar.radio("Data source", ["Sample data", "Upload my CSV"])
 
@@ -49,8 +43,6 @@ except Exception as e:  # bad file, missing columns, etc.
 if df.empty:
     st.warning("No valid rows after cleaning.")
     st.stop()
-
-# ---------------- sidebar: filters ----------------
 st.sidebar.subheader("Filters")
 min_d, max_d = df["date"].min().date(), df["date"].max().date()
 date_range = st.sidebar.date_input("Date range", (min_d, max_d), min_value=min_d, max_value=max_d)
@@ -73,8 +65,6 @@ view = df[mask]
 if view.empty:
     st.warning("No transactions match the current filters.")
     st.stop()
-
-# ---------------- header KPIs ----------------
 st.title("Personal Finance Dashboard")
 k = analysis.kpis(view)
 c1, c2, c3, c4 = st.columns(4)
